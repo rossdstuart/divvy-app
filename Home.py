@@ -54,7 +54,6 @@ LIMIT 1000
 '''
  
 df = pd.read_sql(query, conn)
-last_updated_time = df["FORECAST_POINT"]
 #Timezone
 df['LAST_UPDATED'] = pd.to_datetime(df.LAST_UPDATED, utc=True)
 df['FORECAST_POINT'] = pd.to_datetime(df.FORECAST_POINT, utc=True)
@@ -66,7 +65,8 @@ df = df.drop(columns=['FORECAST_DISTANCE'])
 # st.write('Divvy E-Bike availability Forcasting')
 # Pull the Station IDs
 all_stations = df["LEGACY_ID"].unique()
-last_updated_time = df['FORECAST_POINT'].head(1)
+# last_updated_time = df['FORECAST_POINT'].head(1)
+last_updated_time = pd.to_datetime(df.FORECAST_POINT, utc=True).head(1)
 df = df.drop(columns=['FORECAST_POINT'])
 # df = df.rename(columns= {'LAST_UPDATED': 'Forecast Time', 'LEGACY_ID': 'Station ID' }, inplace = True)
 # stations_stations = st.multiselect("Choose staions to visualize", all_stations, all_stations[:3])
