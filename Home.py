@@ -15,6 +15,7 @@ st.sidebar.image(
     "./images/AHEAD.png",
     width=200
 )
+st.sidebar.write("### Powered By:")
 st.sidebar.image(
     "./images/snowflake.png",
     width=200
