@@ -8,7 +8,18 @@ st.set_page_config(
     )
 
 st.markdown("# Stations Key ❄️")
-st.sidebar.markdown("# Stations Key ❄️")
+st.sidebar.image(
+    "./images/AHEAD.png",
+    width=200
+)
+st.sidebar.image(
+    "./images/snowflake.png",
+    width=200
+)
+st.sidebar.image(
+    "./images/datarobot.png",
+    width=200
+)
 
 station_info_url = "https://gbfs.divvybikes.com/gbfs/en/station_information.json"
 
