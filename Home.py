@@ -28,7 +28,7 @@ st.sidebar.image(
 
 @st.experimental_singleton
 def init_connection():
-    return snowflake.connector.connect(**st.secrets["snowflake"])
+    return snowflake.connector.connect(**st.secrets["snowflake"], client_session_keep_alive=True)
 
 conn = init_connection()
 
@@ -46,16 +46,38 @@ SELECT * FROM DIVVY_DATABASE.PUBLIC.DIVVY_DR_RESULTS
 ORDER BY FORECAST_POINT desc, LAST_UPDATED asc
 LIMIT 4800
 '''
- 
+
 df = pd.read_sql(query, conn)
+
+#######
+# station_query = '''
+# SELECT LEGACY_ID, NAME FROM DIVVY_DATABASE.PUBLIC.STATION_INFO_FLATTEN
+# '''
+# station_df = pd.read_sql(station_query, conn)
+# st.write(station_df)
+
+# ##########
+
+# current_query = '''
+# select LEGACY_ID, NUM_EBIKES_AVAILABLE from STATION_STATUS_FLATTEN_FULL
+#     where last_updated = (
+#         select last_updated from station_status_flatten_full
+#     order by last_updated desc
+#     limit 1);
+# '''
+# current_df = pd.read_sql(current_query, conn)
+# # st.write(station_df)
+
+
+#################
+
+
 #Timezone
 df['LAST_UPDATED'] = pd.to_datetime(df.LAST_UPDATED, utc=True, format='%Y/%m/%d %i:$M %p')
 df['NUM_EBIKES_AVAILABLE_BOOL (actual)_True_PREDICTION'] = df['NUM_EBIKES_AVAILABLE_BOOL (actual)_True_PREDICTION'].map('{:.2%}'.format)
 #Columns Changes
 df = df.drop(columns=['FORECAST_DISTANCE'])
-# df['LEGACY_ID'] = df["LEGACY_ID"].str('"', '')
 
-# st.write('Divvy E-Bike availability Forcasting')
 # Pull the Station IDs
 all_stations = df["LEGACY_ID"].unique()
 
@@ -65,3 +87,14 @@ df = df.drop(columns=['FORECAST_POINT'])
 stations_stations = st.multiselect("Choose your staions", all_stations)
 selected_rows = df.loc[df['LEGACY_ID'].isin(stations_stations)]
 AgGrid(selected_rows)
+
+## display the current availaiblity 
+# selected_current = current_df.loc[current_df['LEGACY_ID'].isin(stations_stations)]
+# st.write(selected_current)
+
+
+# ### Plot the line chart
+# plot_data = df.iloc[:, [0,1,3]]
+# # st.line_chart(plot_data)
+# if plot_data is not None:
+#     plot_data.plot()
