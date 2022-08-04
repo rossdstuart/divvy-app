@@ -4,6 +4,7 @@ import streamlit as st
 from st_aggrid import AgGrid
 import snowflake.connector
 import pandas as pd
+import matplotlib.pyplot as plt
 
 st.set_page_config(
         page_icon="🚲", 
@@ -80,6 +81,7 @@ df = df.drop(columns=['FORECAST_DISTANCE'])
 
 # Pull the Station IDs
 all_stations = df["LEGACY_ID"].unique()
+# all_stations2 = all_stations.astype(pd.int)
 
 df = df.drop(columns=['FORECAST_POINT'])
 # df = df.rename(columns= {'LAST_UPDATED': 'Forecast Time', 'LEGACY_ID': 'Station ID' }, inplace = True)
@@ -98,3 +100,57 @@ AgGrid(selected_rows)
 # # st.line_chart(plot_data)
 # if plot_data is not None:
 #     plot_data.plot()
+
+
+# CSS to inject contained in a string
+hide_table_row_index = """
+            <style>
+            thead tr th:first-child {display:none}
+            tbody th {display:none}
+            </style>
+            """
+
+# Inject CSS with Markdown
+st.markdown(hide_table_row_index, unsafe_allow_html=True)
+
+
+######## line chart
+if not selected_rows.empty:
+    # st.write(selected_rows.iloc[:, [1,3]])
+    line_plot = selected_rows.iloc[:, [2]]
+    # st.pyplot(line_plot)
+    # st.write(line_plot.style.hide_index())
+    st.dataframe(line_plot)
+
+
+
+
+
+    # st.write(line_plot.to_string(index=False))
+
+
+    # timeseries_data = { 
+    #     # 'Date': ['2021-12-26', '2021-12-29',
+    #     #          '2021-12-27', '2021-12-30',
+    #     #          '2021-12-28', '2021-12-31' ], 
+    #     'Date': (selected_rows.iloc[:, [1]](index=False)),
+        
+    #     'Washington': [42, 41, 41, 42, 42, 40],
+        
+    #     'Canada' : [30, 30, 31, 30, 30, 30],
+        
+    #     'California' : [51, 50, 50, 50, 50, 50]
+    # }
+
+    # # Create dataframe
+
+    # dataframe = pd.DataFrame(timeseries_data,columns=['Date', 'Washington', 'Canada', 'California'])
+    
+    # # Changing the datatype
+
+    # dataframe["Date"] = dataframe["Date"].astype("datetime64")
+    
+    # # Setting the Date as index
+
+    # dataframe = dataframe.set_index("Date")
+    # dataframe
