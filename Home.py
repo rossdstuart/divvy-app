@@ -5,6 +5,7 @@ from st_aggrid import AgGrid
 import snowflake.connector
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
 st.set_page_config(
         page_icon="🚲", 
@@ -78,16 +79,18 @@ df['LAST_UPDATED'] = pd.to_datetime(df.LAST_UPDATED, utc=True, format='%Y/%m/%d 
 df['NUM_EBIKES_AVAILABLE_BOOL (actual)_True_PREDICTION'] = df['NUM_EBIKES_AVAILABLE_BOOL (actual)_True_PREDICTION'].map('{:.2%}'.format)
 #Columns Changes
 df = df.drop(columns=['FORECAST_DISTANCE'])
+df['LEGACY_ID'] = df['LEGACY_ID'].apply(lambda x: x.replace('"', ''))
 
 # Pull the Station IDs
-all_stations = df["LEGACY_ID"].unique()
-# all_stations2 = all_stations.astype(pd.int)
+all_stations = pd.unique(df[["LEGACY_ID"]].values.ravel())
+
 
 df = df.drop(columns=['FORECAST_POINT'])
 # df = df.rename(columns= {'LAST_UPDATED': 'Forecast Time', 'LEGACY_ID': 'Station ID' }, inplace = True)
 # stations_stations = st.multiselect("Choose staions to visualize", all_stations, all_stations[:3])
 stations_stations = st.multiselect("Choose your staions", all_stations)
 selected_rows = df.loc[df['LEGACY_ID'].isin(stations_stations)]
+selected_rows.sort_values(by=['LAST_UPDATED', 'LEGACY_ID'])
 AgGrid(selected_rows)
 
 ## display the current availaiblity 
@@ -120,7 +123,7 @@ if not selected_rows.empty:
     line_plot = selected_rows.iloc[:, [2]]
     # st.pyplot(line_plot)
     # st.write(line_plot.style.hide_index())
-    st.dataframe(line_plot)
+    # st.dataframe(line_plot)
 
 
 
