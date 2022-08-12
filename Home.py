@@ -6,6 +6,7 @@ import snowflake.connector
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+import os
 
 st.set_page_config(
         page_icon="🚲", 
@@ -37,7 +38,7 @@ conn = init_connection()
 # Perform query.
 # Uses st.experimental_memo to only rerun when the query changes or after 10 min.
 # Testing to remove the ttl to see if it saves on query costs
-# @st.experimental_memo(ttl=600) 
+@st.experimental_memo(ttl=600) 
 def run_query(query):
     with conn.cursor() as cur:
         cur.execute(query)
@@ -81,6 +82,8 @@ df['NUM_EBIKES_AVAILABLE_BOOL (actual)_True_PREDICTION'] = df['NUM_EBIKES_AVAILA
 #Columns Changes
 df = df.drop(columns=['FORECAST_DISTANCE'])
 df['LEGACY_ID'] = df['LEGACY_ID'].apply(lambda x: x.replace('"', ''))
+# os.environ["TZ"] = "America/Chicago"
+# df['LAST_UPDATED'] = df['LAST_UPDATED'].dt.strftime('%I:%M %p')
 
 # Pull the Station IDs
 all_stations = pd.unique(df[["LEGACY_ID"]].values.ravel())

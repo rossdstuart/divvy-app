@@ -32,7 +32,7 @@ data = response.read()
 values = json.loads(data)
 stations_info = values["data"]["stations"]
 
-station_points = pd.DataFrame(columns = ['lat', 'lon','legacy_id'])
+station_points = pd.DataFrame(columns = ['lat', 'lon','legacy_id', 'name'])
 station_list = ["185", "222", "47", "196", "116", "316", "285", "125"]
 for station in stations_info:
     if station['legacy_id'] in station_list:
@@ -40,7 +40,7 @@ for station in stations_info:
             station['legacy_id'],": ", station['name']
             )
         # add point to df
-        station_points.loc[len(station_points)] = [station['lat'], station['lon'], station['legacy_id']]
+        station_points.loc[len(station_points)] = [station['lat'], station['lon'], station['legacy_id'], station['name']]
 
 # Map the points
 # st.write(station_points)
@@ -71,7 +71,7 @@ r = pdk.Deck(
     layers=[StationLayer],
     initial_view_state=view,
     map_style="mapbox://styles/mapbox/light-v10",
-    tooltip={"text": "{legacy_id}"},
+    tooltip={"text": "Station: {legacy_id} \n {name}"},
 )
 
 map = st.pydeck_chart(r)
