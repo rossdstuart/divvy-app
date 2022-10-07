@@ -13,7 +13,7 @@ st.set_page_config(
         page_title="Divvy Dashboard"
     )
 
-st.markdown("# Divvy E-Bike availability Forcasting")
+st.markdown("# Divvy E-Bike availability Forecasting")
 st.sidebar.image(
     "./images/AHEAD.png",
     width=200
