@@ -28,8 +28,8 @@ st.sidebar.image(
     width=200
 )
 
-
-@st.experimental_singleton
+#depricated code
+# @st.experimental_singleton
 def init_connection():
     return snowflake.connector.connect(**st.secrets["snowflake"], client_session_keep_alive=True)
 
@@ -38,7 +38,7 @@ conn = init_connection()
 # Perform query.
 # Uses st.experimental_memo to only rerun when the query changes or after 10 min.
 # Testing to remove the ttl to see if it saves on query costs
-@st.experimental_memo(ttl=600) 
+# @st.experimental_memo(ttl=600) 
 def run_query(query):
     with conn.cursor() as cur:
         cur.execute(query)
@@ -46,7 +46,7 @@ def run_query(query):
 
 
 query = '''
-SELECT * FROM DIVVY_DATABASE.PUBLIC.DIVVY_DR_RESULTS
+SELECT * FROM DIVVY_DATABASE.PUBLIC.DIVVY_DR_8SERIES
 ORDER BY FORECAST_POINT desc, LAST_UPDATED asc
 LIMIT 4800
 '''

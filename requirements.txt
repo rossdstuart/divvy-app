@@ -1,10 +1,16 @@
 # requirements.txt
-snowflake-connector-python == 2.7
-streamlit == 1.11
-pandas == 1.3.2
-pyarrow<5.1.0,>=5.0.0
-cffi==1.15.0
+# snowflake-connector-python == 2.7
+# streamlit == 1.11
+# pandas == 1.3.2
+# pyarrow<5.1.0,>=5.0.0
+# cffi==1.15.0
 streamlit-aggrid
 # pytz
 pydeck
 matplotlib
+
+snowflake-connector-python
+streamlit
+pandas
+pyarrow
+cffi
